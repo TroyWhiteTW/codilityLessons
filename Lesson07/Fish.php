@@ -8,16 +8,16 @@ function solution($A, $B)
     for ($i = 0; $i < $c; $i++) {
         switch ($B[$i]) {
             case 0:
-                $eat = true;
+                $eat = false;
                 do {
                     $x = array_pop($temp);
-                    if ($x == null) {
+                    if ($x === null) {
                         $res++;
-                        $eat = false;
+                        $eat = true;
                         break;
                     }
                 } while ($x < $A[$i]);
-                if ($eat === true) {
+                if ($eat === false) {
                     array_push($temp, $x);
                 }
                 break;

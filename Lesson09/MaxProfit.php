@@ -3,13 +3,9 @@
 function solution($A)
 {
     $C = count($A);
-    $min = null;
+    $min = $A[0];
     $profit = 0;
-    for ($i = 0; $i < $C; $i++) {
-        if ($min === null) {
-            $min = $A[$i];
-        continue;
-    }
+    for ($i = 1; $i < $C; $i++) {
         $min = $A[$i] < $min ? $A[$i] : $min;
         $temp = $A[$i] - $min;
         $profit = $temp > $profit ? $temp : $profit;

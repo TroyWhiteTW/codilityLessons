@@ -2,6 +2,7 @@
 
 function solution($H)
 {
+    // TODO: 未完成
     return 7;
 }
 
