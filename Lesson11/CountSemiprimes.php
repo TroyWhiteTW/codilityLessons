@@ -2,6 +2,7 @@
 
 function solution($N, $P, $Q)
 {
+    error_reporting(0);
     function isPrime($n)
     {
         $sqrtN = sqrt($n);
@@ -16,16 +17,16 @@ function solution($N, $P, $Q)
         return false;
     }
 
-    function findPrime($n)
-    {
-        $factor = [];
-        for ($i = 2; $i <= $n; $i++) {
-            if (isPrime($i) == true) {
-                $factor[] = $i;
-            }
-        }
-        return $factor;
-    }
+//    function findPrime($n)
+//    {
+//        $factor = [];
+//        for ($i = 2; $i <= $n; $i++) {
+//            if (isPrime($i) == true) {
+//                $factor[] = $i;
+//            }
+//        }
+//        return $factor;
+//    }
 
     function isSemiprime($n)
     {
@@ -42,18 +43,27 @@ function solution($N, $P, $Q)
         return false;
     }
 
-    function countSemiprime($x, $y)
-    {
-        $k = 0;
-        for ($i = $x; $i <= $y; $i++) {
-            if (isSemiprime($i) == true) $k++;
+//    function countSemiprime($x, $y)
+//    {
+//        $k = 0;
+//        for ($i = $x; $i <= $y; $i++) {
+//            if (isSemiprime($i) == true) $k++;
+//        }
+//        return $k;
+//    }
+
+    $temp = [];
+    $a = 0;
+    for ($i = 1; $i <= $N; $i++) {
+        if (isSemiprime($i) == true) {
+            $a++;
         }
-        return $k;
+        $temp[$i] = $a;
     }
 
     $res = [];
     foreach ($P as $k => $v) {
-        $res[$k] = countSemiprime($v, $Q[$k]);
+        $res[$k] = $temp[$Q[$k]] - $temp[$v - 1];
     }
 
     return $res;
