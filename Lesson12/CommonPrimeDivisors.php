@@ -2,71 +2,52 @@
 
 function solution($A, $B)
 {
-    function isPrime($x)
-    {
-        $sqrtX = sqrt($x);
-        $t = 0;
-        for ($i = 1; $i <= $sqrtX; $i++) {
-            if ($x % $i == 0) {
-                $t += 2;
-                if ($t > 2) {
-                    return false;
-                }
-            }
-        }
-        if ($t == 2) {
-            return true;
-        }
-        return false;
-    }
-
     function findPrimeDivisors($x)
     {
-        $sqrtX = sqrt($x);
-        $temp = [];
-        for ($i = 1; $i <= $sqrtX; $i++) {
+        $primeDivisors = [];
+        if ($x % 2 == 0) {
+            $primeDivisors[] = 2;
+        }
+        while ($x % 2 == 0) {
+            $x = $x / 2;
+        }
+
+        for ($i = 3; $i <= $x; $i += 2) {
             if ($x % $i == 0) {
-                $temp[] = $i;
-                $temp[] = $x / $i;
+                $primeDivisors[] = $i;
+            }
+            while ($x % $i == 0) {
+                $x = $x / $i;
             }
         }
-        array_unique($temp);
-        $temp2 = [];
-        foreach ($temp as $item) {
-            if (isPrime($item) == true) {
-                $temp2[] = $item;
-            }
-        }
-//        if ($x == 5) {
-//            var_dump($temp2);
-//        }
-        return $temp2;
+//        var_dump($primeDivisors);
+        return $primeDivisors;
     }
 
     $matchArray = $A;
     foreach ($B as $item) {
         $matchArray[] = $item;
     }
-    array_unique($matchArray);
-
+//    var_dump($matchArray);
+    $matchArray = array_unique($matchArray);
+//    var_dump($matchArray);
     $table = [];
     foreach ($matchArray as $item) {
         $table[$item] = findPrimeDivisors($item);
     }
-//    var_dump($table);
+
     $answer = 0;
     foreach ($A as $k => $v) {
-//        if ($k == 0) {
-//            var_dump($table[$v]);
-//            var_dump($table[$B[$k]]);
-//        }
-//        var_dump(empty($table[$v]));
+        if ($v == $B[$k]) {
+            $answer++;
+            continue;
+        }
         if ($table[$v] == $table[$B[$k]]) {
             $answer++;
-
-//            var_dump($v);
-//            var_dump($B[$k]);
         }
+//        if (findPrimeDivisors($v) == findPrimeDivisors($B[$k])) {
+//            $answer++;
+//        }
     }
 
     return $answer;
@@ -74,3 +55,4 @@ function solution($A, $B)
 
 //var_dump(solution([15, 10, 3], [75, 30, 5]));
 var_dump(solution([15, 10, 9], [75, 30, 5]));
+//var_dump(solution([6059, 551], [442307, 303601]));
