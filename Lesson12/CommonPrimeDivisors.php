@@ -4,9 +4,9 @@ function solution($A, $B)
 {
     function findPrimeDivisors($x)
     {
-        $primeDivisors = [];
+        $r = 1;
         if ($x % 2 == 0) {
-            $primeDivisors[] = 2;
+            $r *= 2;
         }
         while ($x % 2 == 0) {
             $x = $x / 2;
@@ -14,26 +14,40 @@ function solution($A, $B)
 
         for ($i = 3; $i <= $x; $i += 2) {
             if ($x % $i == 0) {
-                $primeDivisors[] = $i;
+                $r *= $i;
             }
             while ($x % $i == 0) {
                 $x = $x / $i;
             }
         }
-//        var_dump($primeDivisors);
-        return $primeDivisors;
+
+        return $r;
     }
 
-    $matchArray = $A;
-    foreach ($B as $item) {
-        $matchArray[] = $item;
-    }
-//    var_dump($matchArray);
-    $matchArray = array_unique($matchArray);
-//    var_dump($matchArray);
     $table = [];
-    foreach ($matchArray as $item) {
-        $table[$item] = findPrimeDivisors($item);
+    foreach ($A as $k => $v) {
+        if ($v == $B[$k]) {
+            continue;
+        }
+
+        if ($v > $B[$k]) {
+            $x = $v;
+            $y = $B[$k];
+        } else {
+            $x = $B[$k];
+            $y = $v;
+        }
+
+        if ($x % $y == 0) {
+            $z = $x / $y;
+        } else {
+            $z = $x * $y;
+        }
+
+        if ($table[$z] == null) {
+            $table[$z] = findPrimeDivisors($z);
+        }
+
     }
 
     $answer = 0;
@@ -42,12 +56,28 @@ function solution($A, $B)
             $answer++;
             continue;
         }
-        if ($table[$v] == $table[$B[$k]]) {
+
+        if ($v > $B[$k]) {
+            $x = $v;
+            $y = $B[$k];
+        } else {
+            $x = $B[$k];
+            $y = $v;
+        }
+
+        if ($x % $y == 0) {
+            $z = $x / $y;
+        } else {
+            $z = $x * $y;
+        }
+
+//        $t = findPrimeDivisors($z);
+        $t = $table[$z];
+
+        if ($x % $t == 0 && $y % $t == 0) {
             $answer++;
         }
-//        if (findPrimeDivisors($v) == findPrimeDivisors($B[$k])) {
-//            $answer++;
-//        }
+
     }
 
     return $answer;
