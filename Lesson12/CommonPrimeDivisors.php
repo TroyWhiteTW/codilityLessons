@@ -2,85 +2,66 @@
 
 function solution($A, $B)
 {
-    function findPrimeDivisors($x)
-    {
-        $r = 1;
-        if ($x % 2 == 0) {
-            $r *= 2;
-        }
-        while ($x % 2 == 0) {
-            $x = $x / 2;
-        }
-
-        for ($i = 3; $i <= $x; $i += 2) {
-            if ($x % $i == 0) {
-                $r *= $i;
-            }
-            while ($x % $i == 0) {
-                $x = $x / $i;
-            }
-        }
-
-        return $r;
-    }
-
-    $table = [];
-    foreach ($A as $k => $v) {
-        if ($v == $B[$k]) {
-            continue;
-        }
-
-        if ($v > $B[$k]) {
-            $x = $v;
-            $y = $B[$k];
-        } else {
-            $x = $B[$k];
-            $y = $v;
-        }
-
-        if ($x % $y == 0) {
-            $z = $x / $y;
-        } else {
-            $z = $x * $y;
-        }
-
-        if ($table[$z] == null) {
-            $table[$z] = findPrimeDivisors($z);
-        }
-
-    }
-
     $answer = 0;
+
     foreach ($A as $k => $v) {
+
+        // 這項判斷可有可無，對結果影響不大
         if ($v == $B[$k]) {
             $answer++;
             continue;
         }
 
-        if ($v > $B[$k]) {
-            $x = $v;
-            $y = $B[$k];
-        } else {
-            $x = $B[$k];
-            $y = $v;
-        }
-
-        if ($x % $y == 0) {
-            $z = $x / $y;
-        } else {
-            $z = $x * $y;
-        }
-
-//        $t = findPrimeDivisors($z);
-        $t = $table[$z];
-
-        if ($x % $t == 0 && $y % $t == 0) {
+        if (hasSamePrimeDivisors($v, $B[$k]) == true) {
             $answer++;
         }
 
     }
 
     return $answer;
+}
+
+// 找到任兩個數字的最大公因數
+function findGreatestCommonDivisor($x, $y)
+{
+    if ($x % $y == 0) {
+        return $y;
+    }
+
+    return findGreatestCommonDivisor($y, ($x % $y));
+}
+
+// 找出任兩個數字的所有質因數是否相同
+function hasSamePrimeDivisors($x, $y)
+{
+    $gcd = findGreatestCommonDivisor($x, $y);// 兩數的最大公因數
+
+    while ($x != 1) {
+        $gcdX = findGreatestCommonDivisor($x, $gcd);// 找出 x 跟 gcd 的最大公因數
+        if ($gcdX == 1) {
+            break;
+        }
+        $x /= $gcdX;// 把 x 跟 gcd 的最大公因數從 x 中除掉(去除)後繼續找下去
+    }
+
+    if ($x != 1) {// 如果 x 不等於 1 代表這個數字不在兩數的最大公因數裡面，所以兩數的所有質因數必不相同
+        return false;
+    }
+
+    while ($y != 1) {
+        $gcdY = findGreatestCommonDivisor($y, $gcd);
+        if ($gcdY == 1) {
+            break;
+        }
+        $y /= $gcdY;
+    }
+
+//    if($y!=1){
+//        return false;
+//    }
+//
+//    return true;
+    return $y == 1;// 前段註解的簡寫表達
 }
 
 //var_dump(solution([15, 10, 3], [75, 30, 5]));
